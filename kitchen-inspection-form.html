@@ -1,0 +1,566 @@
+<!doctype html>
+<title>Kitchen Inspection Form</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#f4f6f5;
+  --surface:#ffffff;
+  --surface-2:#eef2f0;
+  --border:#d9e0dc;
+  --text:#1c2622;
+  --text-muted:#5b6b63;
+  --accent:#1f7a5c;
+  --accent-ink:#0f4f3a;
+  --accent-soft:#e3f3ec;
+  --warn:#b45309;
+  --warn-soft:#fef3e2;
+  --danger:#b91c1c;
+  --danger-soft:#fdecec;
+  --chip-bg:#f0f3f1;
+  --chip-border:#cdd8d2;
+  --chip-selected-bg:var(--accent);
+  --chip-selected-text:#ffffff;
+  --shadow: 0 1px 2px rgba(20,30,25,0.06), 0 1px 1px rgba(20,30,25,0.04);
+  --radius: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121613;
+    --surface:#1a201c;
+    --surface-2:#212823;
+    --border:#2c342f;
+    --text:#e7ede9;
+    --text-muted:#98a69e;
+    --accent:#3fb787;
+    --accent-ink:#bdf0d9;
+    --accent-soft:#173327;
+    --warn:#f0b054;
+    --warn-soft:#3a2c14;
+    --danger:#f28b82;
+    --danger-soft:#3a1c1a;
+    --chip-bg:#232b26;
+    --chip-border:#37423c;
+    --chip-selected-bg:var(--accent);
+    --chip-selected-text:#0d1310;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121613;
+  --surface:#1a201c;
+  --surface-2:#212823;
+  --border:#2c342f;
+  --text:#e7ede9;
+  --text-muted:#98a69e;
+  --accent:#3fb787;
+  --accent-ink:#bdf0d9;
+  --accent-soft:#173327;
+  --warn:#f0b054;
+  --warn-soft:#3a2c14;
+  --danger:#f28b82;
+  --danger-soft:#3a1c1a;
+  --chip-bg:#232b26;
+  --chip-border:#37423c;
+  --chip-selected-bg:var(--accent);
+  --chip-selected-text:#0d1310;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-tap-highlight-color:transparent;
+}
+.wrap{
+  max-width:760px;
+  margin:0 auto;
+  padding:16px 14px 120px;
+}
+header.top{
+  padding:6px 2px 16px;
+}
+header.top h1{
+  font-size:1.3rem;
+  margin:0 0 4px;
+  letter-spacing:-0.01em;
+}
+header.top p{
+  margin:0;
+  color:var(--text-muted);
+  font-size:0.88rem;
+  line-height:1.4;
+}
+.meta-note{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:0.8rem;
+  color:var(--text-muted);
+  margin-top:12px;
+  line-height:1.45;
+}
+
+/* summary bar */
+.summary{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border);
+  padding:10px 14px;
+  display:flex;
+  gap:10px;
+  align-items:stretch;
+}
+.summary-card{
+  flex:1;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:8px 10px;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.summary-card .label{
+  font-size:0.62rem;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  color:var(--text-muted);
+  font-weight:600;
+}
+.summary-card .value{
+  font-size:1.25rem;
+  font-weight:700;
+  margin-top:2px;
+  color:var(--accent-ink);
+}
+.summary-card.star .value{color:var(--text);}
+.progress-track{
+  height:5px;
+  border-radius:3px;
+  background:var(--border);
+  margin-top:8px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:var(--accent);
+  width:0%;
+  transition:width .25s ease;
+}
+
+.withdraw-banner{
+  display:none;
+  margin:12px 0;
+  padding:12px 14px;
+  border-radius:12px;
+  background:var(--danger-soft);
+  border:1px solid var(--danger);
+  color:var(--danger);
+  font-size:0.85rem;
+  line-height:1.45;
+  font-weight:600;
+}
+.withdraw-banner.show{display:block;}
+
+/* accordion sections */
+section.group{
+  margin-top:14px;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  background:var(--surface);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+details{width:100%;}
+summary{
+  list-style:none;
+  cursor:pointer;
+  padding:14px 14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  user-select:none;
+}
+summary::-webkit-details-marker{display:none;}
+.chevron{
+  width:20px;height:20px;flex:none;
+  transition:transform .2s ease;
+  color:var(--text-muted);
+}
+details[open] > summary .chevron{transform:rotate(90deg);}
+.group-title{
+  flex:1;
+  font-weight:650;
+  font-size:0.95rem;
+  letter-spacing:-0.005em;
+}
+.group-badge{
+  font-size:0.72rem;
+  font-weight:700;
+  padding:3px 9px;
+  border-radius:999px;
+  background:var(--surface-2);
+  color:var(--text-muted);
+  white-space:nowrap;
+}
+.group-badge.done{
+  background:var(--accent-soft);
+  color:var(--accent-ink);
+}
+.items{
+  border-top:1px solid var(--border);
+}
+.item{
+  padding:14px;
+  border-bottom:1px solid var(--border);
+}
+.item:last-child{border-bottom:none;}
+.item-head{
+  display:flex;
+  gap:10px;
+  align-items:baseline;
+  margin-bottom:8px;
+}
+.item-no{
+  flex:none;
+  font-size:0.72rem;
+  font-weight:700;
+  color:var(--accent-ink);
+  background:var(--accent-soft);
+  border-radius:6px;
+  padding:2px 6px;
+  min-width:1.6em;
+  text-align:center;
+}
+.item-text{
+  font-size:0.87rem;
+  line-height:1.4;
+}
+.item-ref{
+  display:block;
+  font-size:0.72rem;
+  color:var(--text-muted);
+  margin-top:2px;
+}
+.result-row{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:6px;
+  margin-top:6px;
+}
+.result-label{
+  font-size:0.68rem;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  color:var(--text-muted);
+  width:100%;
+  margin-bottom:2px;
+}
+.chip{
+  border:1px solid var(--chip-border);
+  background:var(--chip-bg);
+  color:var(--text);
+  border-radius:10px;
+  padding:9px 14px;
+  font-size:0.85rem;
+  font-weight:600;
+  min-width:44px;
+  min-height:38px;
+  cursor:pointer;
+  transition:background .15s ease, color .15s ease, border-color .15s ease, transform .1s ease;
+}
+.chip:active{transform:scale(0.96);}
+.chip.selected{
+  background:var(--chip-selected-bg);
+  border-color:var(--chip-selected-bg);
+  color:var(--chip-selected-text);
+}
+.chip.nc.selected{
+  background:var(--danger);
+  border-color:var(--danger);
+  color:#fff;
+}
+.available{
+  font-size:0.68rem;
+  color:var(--text-muted);
+  margin-left:auto;
+  white-space:nowrap;
+}
+
+footer.actions{
+  position:sticky;
+  bottom:0;
+  z-index:20;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border-top:1px solid var(--border);
+  display:flex;
+  gap:10px;
+  max-width:760px;
+  margin:0 auto;
+}
+.btn{
+  flex:1;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  font-size:0.85rem;
+  font-weight:650;
+  padding:12px;
+  cursor:pointer;
+}
+.btn.primary{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+}
+.btn:active{transform:scale(0.98);}
+
+@media (min-width:640px){
+  .wrap{padding:24px 20px 130px;}
+  header.top h1{font-size:1.55rem;}
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Kitchen Food Safety Inspection</h1>
+    <p>Tap a section to expand it, then record the result for each item. Points shown are the demerit values that apply if an item is non‑compliant — select 0 if it's compliant.</p>
+    <div class="meta-note">Scoring guide: 5 star = 0–3 points · 4 star = 4–7 points · 3 star = 8–11 points · 12+ points = unrated. A non‑compliance (NC) in any 8‑point item, or an NC food‑standards item, means withdrawal from the scheme regardless of total score.</div>
+  </header>
+
+  <div class="summary">
+    <div class="summary-card">
+      <div class="label">Total score</div>
+      <div class="value" id="totalScore">0</div>
+    </div>
+    <div class="summary-card star">
+      <div class="label">Rating</div>
+      <div class="value" id="starRating">–</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Answered</div>
+      <div class="value"><span id="answeredCount">0</span><span style="font-size:0.7rem;color:var(--text-muted);">/<span id="totalCount">0</span></span></div>
+    </div>
+  </div>
+
+  <div id="withdrawBanner" class="withdraw-banner">⚠ Withdrawal condition triggered — an 8‑point item was marked non‑compliant, or the Food Standards Code item is NC. This overrides the star rating.</div>
+
+  <div id="groups"></div>
+</div>
+
+<footer class="actions">
+  <button class="btn" id="resetBtn">Reset all</button>
+  <button class="btn primary" id="printBtn">Print / Save PDF</button>
+</footer>
+
+<script>
+const DATA = [
+  {title:"General – Food Safety Standards", items:[
+    ["1","Has the business notified","3.2.2-4",[1]],
+    ["1a","FSS appointed & reasonably available","3.2.2A-11",[1]],
+    ["2","Food business general duty and food handler illness responsibilities demonstrated","3.2.2-16,18",[1,8]],
+  ]},
+  {title:"Received goods", items:[
+    ["3","Are protected from contamination","3.2.2-5(1)",[4]],
+    ["4","Are traceable and accurately identified","3.2.2-5(2)",[1]],
+    ["5","PHF received under temp control","3.2.2-5(3,4), 3.2.2A-12",[4]],
+  ]},
+  {title:"Transport & distribution", items:[
+    ["6","All foods are protected from contamination during transport","3.2.2-10(a)",[4]],
+    ["7","PHF transported under time/temp control","3.2.2-10(b,c), 3.2.2A-12",[4]],
+  ]},
+  {title:"Recalls & food disposal", items:[
+    ["8","Food for disposal clearly identified & segregated","3.2.2-11",[1]],
+    ["9","Recall process in place","3.2.2-12",[1]],
+  ]},
+  {title:"Storage", items:[
+    ["10","Food stored under appropriate conditions and protected from contamination","3.2.2-6(1)",[1,4]],
+    ["11","PHF stored under temp control","3.2.2-6(2), 3.2.2A-12",[4,8]],
+  ]},
+  {title:"Processing", items:[
+    ["12","Practical measures in place to process safe and suitable food","3.2.2-7(1)(a)",[4]],
+    ["13","Food protected from contamination","3.2.2-7(1)(b)(i)",[4]],
+    ["14","All foods processed adequately – in particular high risk foods","3.2.2-7(1)(b)(ii); 3.2.2-25, 3.2.2A-12",[8]],
+    ["15","Minimised amount of time PHF are out of temp control","3.2.2-7(2), 3.2.2A-12",[8]],
+    ["16","PHF cooled correctly","3.2.2-7(3); 3.2.2-25, 3.2.2A-12",[8]],
+    ["17","PHF rapidly reheated to hold it hot","3.2.2-7(4), 3.2.2A-12",[8]],
+  ]},
+  {title:"Display", items:[
+    ["18","Displayed foods protected from contamination, RTE self-serve food is supervised & separate utensils provided","3.2.2-8(1-4)",[4]],
+    ["19","PHF displayed under temp control or time limit not exceeded","3.2.2-8(5), 3.2.2A-12",[8]],
+  ]},
+  {title:"Packaging", items:[
+    ["20","Process and materials are appropriate","3.2.2-9",[1]],
+  ]},
+  {title:"Premises & equipment (incl. vehicles)", items:[
+    ["21","Accessible hand washing facilities used only for washing hands, arms and face","3.2.2-17; 3.2.3-14",[4]],
+    ["22","Suitability and maintenance of premises","3.2.2-21, 3.2.3-3,10,11",[1,4]],
+    ["23","Suitability and maintenance of fixtures, fittings and equipment inc. vehicles","3.2.2-21; 3.2.3-12,13,17",[1,4]],
+    ["24","Adequate ventilation and lighting","3.2.3-7,8",[1]],
+    ["25","Adequate toilet facilities","3.2.3-16",[1]],
+    ["26","Facilities provided for storage of personal/non-food items","3.2.3-15",[1]],
+    ["27","Adequate water supply and potable","3.2.3-4,13(1)",[4,8]],
+    ["28","Adequate disposal of sewage & wastewater","3.2.3-5,13(2)",[1]],
+    ["29","Adequate storage of garbage/recyclables","3.2.3-6",[1]],
+    ["30","Practicable animal/pest exclusion & eradication measures in place","3.2.2-24(1)(b,c)",[1]],
+    ["31","No signs of pest/animal activity (score 8 if observed in high risk areas)","3.2.2-24(1)(a)(2,3)",[1,8]],
+    ["32","Accurate temp measuring device in use","3.2.2-22",[4]],
+    ["33","Single use items (protected & disposed)","3.2.2-23",[1]],
+  ]},
+  {title:"Adequate cleaning of", items:[
+    ["34","Premises (walls, floors, ceilings)","3.2.2-19(1)",[1,4]],
+    ["35","Fixtures, fittings & equipment","3.2.2-19(2)",[1,4]],
+  ]},
+  {title:"Adequate cleaning & sanitising of", items:[
+    ["36","Eating and drinking utensils","3.2.2-20(1)(a), 3.2.2A-12",[4]],
+    ["37","Food contact surfaces - including equipment (e.g. benches, chopping boards, slicers)","3.2.2-20(1)(b), 3.2.2A-12",[8]],
+  ]},
+  {title:"Food handlers MUST", items:[
+    ["38","NOT handle food or surfaces in a way that is likely to make food unsafe/unsuitable","3.2.2-13",[4,8]],
+    ["39","Notify supervisor if food contaminated & NOT handle food if carrier of FB illness","3.2.2-14",[8]],
+    ["40","Wear appropriate clean clothing/bandages & minimise personal contamination of food/food contact surfaces","3.2.2-15(1)(a-d)",[4]],
+    ["41","NOT eat, cough, sneeze, smoke etc. over food/food prep surfaces","3.2.2-15(1)(e-h)",[8]],
+    ["42","Wash and dry hands as directed by","3.2.2-15(2,3)",[8]],
+    ["43","Wash hands using HWB, soap, warm running water and dry hands appropriately","3.2.2-15(4)",[8]],
+    ["44","Demonstrate appropriate food handling - skills and knowledge","3.2.2-3, 3.2.2A-10",[1,8]],
+  ]},
+  {title:"Miscellaneous Food Standards Code", items:[
+    ["45","NC with other chapters of the Food Standards Code e.g. labelling, retail sale of food past use by date, hemp, F&V in brine","1.2.1, 1.4.4, 2.3.1","cnc"],
+  ]},
+];
+
+const state = {}; // key "no" -> value (number or 'C'/'NC')
+const groupsEl = document.getElementById("groups");
+
+function fmtAvailable(pts){
+  if(pts === "cnc") return "C or NC";
+  return pts.join(" or ");
+}
+
+DATA.forEach((group, gi) => {
+  const section = document.createElement("section");
+  section.className = "group";
+  const details = document.createElement("details");
+  if(gi === 0) details.open = true;
+
+  const summary = document.createElement("summary");
+  summary.innerHTML = `
+    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    <span class="group-title">${group.title}</span>
+    <span class="group-badge" data-badge="${gi}">0/${group.items.length}</span>
+  `;
+  details.appendChild(summary);
+
+  const itemsWrap = document.createElement("div");
+  itemsWrap.className = "items";
+
+  group.items.forEach(([no, text, ref, pts]) => {
+    const item = document.createElement("div");
+    item.className = "item";
+    const options = pts === "cnc" ? [["C","C"],["NC","NC"]] : [[0,"0"], ...pts.map(p => [p, String(p)])];
+    const chipsHtml = options.map(([val,label]) => {
+      const ncClass = (val === "NC") ? " nc" : "";
+      return `<button type="button" class="chip${ncClass}" data-no="${no}" data-val="${val}">${label}</button>`;
+    }).join("");
+    item.innerHTML = `
+      <div class="item-head">
+        <span class="item-no">${no}</span>
+        <span class="item-text">${text}<span class="item-ref">${ref}</span></span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Result — available: ${fmtAvailable(pts)}</span>
+        ${chipsHtml}
+      </div>
+    `;
+    itemsWrap.appendChild(item);
+  });
+
+  details.appendChild(itemsWrap);
+  section.appendChild(details);
+  groupsEl.appendChild(section);
+});
+
+function isNumericResult(no){
+  for(const g of DATA){ for(const it of g.items){ if(it[0]===no) return it[3] !== "cnc"; } }
+  return true;
+}
+
+function recalc(){
+  let total = 0;
+  let answered = 0;
+  let withdraw = false;
+
+  DATA.forEach((group, gi) => {
+    let groupAnswered = 0;
+    group.items.forEach(([no,,,pts]) => {
+      if(state[no] !== undefined){
+        groupAnswered++;
+        if(pts === "cnc"){
+          if(state[no] === "NC") withdraw = true;
+        } else {
+          const v = Number(state[no]);
+          total += v;
+          if(v === 8) withdraw = true;
+        }
+      }
+    });
+    const badge = document.querySelector(`[data-badge="${gi}"]`);
+    if(badge){
+      badge.textContent = `${groupAnswered}/${group.items.length}`;
+      badge.classList.toggle("done", groupAnswered === group.items.length);
+    }
+    answered += groupAnswered;
+  });
+
+  document.getElementById("totalScore").textContent = total;
+  document.getElementById("answeredCount").textContent = answered;
+  document.getElementById("totalCount").textContent = DATA.reduce((s,g) => s + g.items.length, 0);
+
+  let star = "–";
+  if(answered > 0){
+    if(total <= 3) star = "5★";
+    else if(total <= 7) star = "4★";
+    else if(total <= 11) star = "3★";
+    else star = "Unrated";
+  }
+  document.getElementById("starRating").textContent = withdraw ? "N/A" : star;
+  document.getElementById("withdrawBanner").classList.toggle("show", withdraw);
+}
+
+groupsEl.addEventListener("click", (e) => {
+  const chip = e.target.closest(".chip");
+  if(!chip) return;
+  const no = chip.dataset.no;
+  const val = chip.dataset.val;
+  const already = state[no] !== undefined && String(state[no]) === val;
+  const row = chip.parentElement;
+  row.querySelectorAll(".chip").forEach(c => c.classList.remove("selected"));
+  if(already){
+    delete state[no];
+  } else {
+    state[no] = isNaN(Number(val)) ? val : Number(val);
+    chip.classList.add("selected");
+  }
+  recalc();
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if(!confirm("Clear all recorded results?")) return;
+  Object.keys(state).forEach(k => delete state[k]);
+  document.querySelectorAll(".chip.selected").forEach(c => c.classList.remove("selected"));
+  recalc();
+});
+
+document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+recalc();
+</script>
