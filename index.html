@@ -1,566 +1,749 @@
-<!doctype html>
-<title>Kitchen Inspection Form</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kitchen Compliance Audit</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
 <style>
-:root{
-  --bg:#f4f6f5;
-  --surface:#ffffff;
-  --surface-2:#eef2f0;
-  --border:#d9e0dc;
-  --text:#1c2622;
-  --text-muted:#5b6b63;
-  --accent:#1f7a5c;
-  --accent-ink:#0f4f3a;
-  --accent-soft:#e3f3ec;
-  --warn:#b45309;
-  --warn-soft:#fef3e2;
-  --danger:#b91c1c;
-  --danger-soft:#fdecec;
-  --chip-bg:#f0f3f1;
-  --chip-border:#cdd8d2;
-  --chip-selected-bg:var(--accent);
-  --chip-selected-text:#ffffff;
-  --shadow: 0 1px 2px rgba(20,30,25,0.06), 0 1px 1px rgba(20,30,25,0.04);
-  --radius: 14px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#121613;
-    --surface:#1a201c;
-    --surface-2:#212823;
-    --border:#2c342f;
-    --text:#e7ede9;
-    --text-muted:#98a69e;
-    --accent:#3fb787;
-    --accent-ink:#bdf0d9;
-    --accent-soft:#173327;
-    --warn:#f0b054;
-    --warn-soft:#3a2c14;
-    --danger:#f28b82;
-    --danger-soft:#3a1c1a;
-    --chip-bg:#232b26;
-    --chip-border:#37423c;
-    --chip-selected-bg:var(--accent);
-    --chip-selected-text:#0d1310;
+  :root{
+    --ink:#152321;
+    --ink-soft:#4B5F5A;
+    --paper:#EEF3F1;
+    --surface:#FFFFFF;
+    --surface-2:#E4EAE7;
+    --line:#D3DBD7;
+    --accent:#0F6E62;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#DCEEEA;
+    --s0:#2E9E5B; --s1:#83B23C; --s2:#D2B406; --s3:#E68A2E; --s4:#BF4923; --s5:#C0272B;
+    --s0-text:#0B0F0E; --s1-text:#0B0F0E; --s2-text:#0B0F0E; --s3-text:#0B0F0E; --s4-text:#FFFFFF; --s5-text:#FFFFFF;
+    --shadow: 0 1px 2px rgba(21,35,33,.06), 0 6px 20px rgba(21,35,33,.07);
+    --radius: 14px;
   }
-}
-:root[data-theme="dark"]{
-  --bg:#121613;
-  --surface:#1a201c;
-  --surface-2:#212823;
-  --border:#2c342f;
-  --text:#e7ede9;
-  --text-muted:#98a69e;
-  --accent:#3fb787;
-  --accent-ink:#bdf0d9;
-  --accent-soft:#173327;
-  --warn:#f0b054;
-  --warn-soft:#3a2c14;
-  --danger:#f28b82;
-  --danger-soft:#3a1c1a;
-  --chip-bg:#232b26;
-  --chip-border:#37423c;
-  --chip-selected-bg:var(--accent);
-  --chip-selected-text:#0d1310;
-}
-*{box-sizing:border-box;}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  -webkit-tap-highlight-color:transparent;
-}
-.wrap{
-  max-width:760px;
-  margin:0 auto;
-  padding:16px 14px 120px;
-}
-header.top{
-  padding:6px 2px 16px;
-}
-header.top h1{
-  font-size:1.3rem;
-  margin:0 0 4px;
-  letter-spacing:-0.01em;
-}
-header.top p{
-  margin:0;
-  color:var(--text-muted);
-  font-size:0.88rem;
-  line-height:1.4;
-}
-.meta-note{
-  background:var(--surface-2);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:10px 12px;
-  font-size:0.8rem;
-  color:var(--text-muted);
-  margin-top:12px;
-  line-height:1.45;
-}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#E7EFEC; --ink-soft:#A9BDB6; --paper:#0F1615; --surface:#17201F; --surface-2:#1D2827;
+      --line:#2B3735; --accent:#3FCBB6; --accent-ink:#062521; --accent-soft:#173430;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#E7EFEC; --ink-soft:#A9BDB6; --paper:#0F1615; --surface:#17201F; --surface-2:#1D2827;
+    --line:#2B3735; --accent:#3FCBB6; --accent-ink:#062521; --accent-soft:#173430;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
 
-/* summary bar */
-.summary{
-  position:sticky;
-  top:0;
-  z-index:20;
-  background:color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--border);
-  padding:10px 14px;
-  display:flex;
-  gap:10px;
-  align-items:stretch;
-}
-.summary-card{
-  flex:1;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:8px 10px;
-  text-align:center;
-  box-shadow:var(--shadow);
-}
-.summary-card .label{
-  font-size:0.62rem;
-  text-transform:uppercase;
-  letter-spacing:0.06em;
-  color:var(--text-muted);
-  font-weight:600;
-}
-.summary-card .value{
-  font-size:1.25rem;
-  font-weight:700;
-  margin-top:2px;
-  color:var(--accent-ink);
-}
-.summary-card.star .value{color:var(--text);}
-.progress-track{
-  height:5px;
-  border-radius:3px;
-  background:var(--border);
-  margin-top:8px;
-  overflow:hidden;
-}
-.progress-fill{
-  height:100%;
-  background:var(--accent);
-  width:0%;
-  transition:width .25s ease;
-}
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    padding-inline:16px; padding-block:0;
+    min-height:100%;
+  }
+  .mono{ font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace; }
+  h1,h2,h3{ text-wrap:balance; margin:0; }
+  a{ color:var(--accent); }
 
-.withdraw-banner{
-  display:none;
-  margin:12px 0;
-  padding:12px 14px;
-  border-radius:12px;
-  background:var(--danger-soft);
-  border:1px solid var(--danger);
-  color:var(--danger);
-  font-size:0.85rem;
-  line-height:1.45;
-  font-weight:600;
-}
-.withdraw-banner.show{display:block;}
+  .wrap{ max-width:640px; margin-inline:auto; }
 
-/* accordion sections */
-section.group{
-  margin-top:14px;
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  background:var(--surface);
-  overflow:hidden;
-  box-shadow:var(--shadow);
-}
-details{width:100%;}
-summary{
-  list-style:none;
-  cursor:pointer;
-  padding:14px 14px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  user-select:none;
-}
-summary::-webkit-details-marker{display:none;}
-.chevron{
-  width:20px;height:20px;flex:none;
-  transition:transform .2s ease;
-  color:var(--text-muted);
-}
-details[open] > summary .chevron{transform:rotate(90deg);}
-.group-title{
-  flex:1;
-  font-weight:650;
-  font-size:0.95rem;
-  letter-spacing:-0.005em;
-}
-.group-badge{
-  font-size:0.72rem;
-  font-weight:700;
-  padding:3px 9px;
-  border-radius:999px;
-  background:var(--surface-2);
-  color:var(--text-muted);
-  white-space:nowrap;
-}
-.group-badge.done{
-  background:var(--accent-soft);
-  color:var(--accent-ink);
-}
-.items{
-  border-top:1px solid var(--border);
-}
-.item{
-  padding:14px;
-  border-bottom:1px solid var(--border);
-}
-.item:last-child{border-bottom:none;}
-.item-head{
-  display:flex;
-  gap:10px;
-  align-items:baseline;
-  margin-bottom:8px;
-}
-.item-no{
-  flex:none;
-  font-size:0.72rem;
-  font-weight:700;
-  color:var(--accent-ink);
-  background:var(--accent-soft);
-  border-radius:6px;
-  padding:2px 6px;
-  min-width:1.6em;
-  text-align:center;
-}
-.item-text{
-  font-size:0.87rem;
-  line-height:1.4;
-}
-.item-ref{
-  display:block;
-  font-size:0.72rem;
-  color:var(--text-muted);
-  margin-top:2px;
-}
-.result-row{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  gap:6px;
-  margin-top:6px;
-}
-.result-label{
-  font-size:0.68rem;
-  text-transform:uppercase;
-  letter-spacing:0.05em;
-  color:var(--text-muted);
-  width:100%;
-  margin-bottom:2px;
-}
-.chip{
-  border:1px solid var(--chip-border);
-  background:var(--chip-bg);
-  color:var(--text);
-  border-radius:10px;
-  padding:9px 14px;
-  font-size:0.85rem;
-  font-weight:600;
-  min-width:44px;
-  min-height:38px;
-  cursor:pointer;
-  transition:background .15s ease, color .15s ease, border-color .15s ease, transform .1s ease;
-}
-.chip:active{transform:scale(0.96);}
-.chip.selected{
-  background:var(--chip-selected-bg);
-  border-color:var(--chip-selected-bg);
-  color:var(--chip-selected-text);
-}
-.chip.nc.selected{
-  background:var(--danger);
-  border-color:var(--danger);
-  color:#fff;
-}
-.available{
-  font-size:0.68rem;
-  color:var(--text-muted);
-  margin-left:auto;
-  white-space:nowrap;
-}
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:20;
+    background:var(--paper); padding-block:14px 10px;
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-row{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+  .brand{ font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:600;}
+  .brand b{ color:var(--ink); }
+  .progress-track{
+    margin-top:10px; height:6px; border-radius:99px; background:var(--surface-2); overflow:hidden;
+  }
+  .progress-fill{ height:100%; background:var(--accent); border-radius:99px; transition:width .35s ease; }
+  .section-pills{
+    display:flex; gap:6px; margin-top:10px; overflow-x:auto; padding-bottom:2px;
+    scrollbar-width:none;
+  }
+  .section-pills::-webkit-scrollbar{ display:none; }
+  .pill{
+    flex:0 0 auto; font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:99px;
+    background:var(--surface-2); color:var(--ink-soft); border:1px solid transparent; cursor:default;
+    white-space:nowrap;
+  }
+  .pill.done{ background:var(--accent-soft); color:var(--accent); }
+  .pill.current{ background:var(--accent); color:var(--accent-ink); }
+  .pill.clickable{ cursor:pointer; }
 
-footer.actions{
-  position:sticky;
-  bottom:0;
-  z-index:20;
-  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
-  background:color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  border-top:1px solid var(--border);
-  display:flex;
-  gap:10px;
-  max-width:760px;
-  margin:0 auto;
-}
-.btn{
-  flex:1;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:var(--surface);
-  color:var(--text);
-  font-size:0.85rem;
-  font-weight:650;
-  padding:12px;
-  cursor:pointer;
-}
-.btn.primary{
-  background:var(--accent);
-  border-color:var(--accent);
-  color:#fff;
-}
-.btn:active{transform:scale(0.98);}
+  /* ---------- Screens ---------- */
+  .screen{ padding-block:22px 120px; }
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:22px;
+  }
+  .stack{ display:flex; flex-direction:column; gap:16px; }
 
-@media (min-width:640px){
-  .wrap{padding:24px 20px 130px;}
-  header.top h1{font-size:1.55rem;}
-}
+  /* ---------- Intro ---------- */
+  .kicker{ font-size:12.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+  .intro h1{ font-size:28px; margin-top:6px; line-height:1.15; }
+  .intro p.lead{ color:var(--ink-soft); font-size:15px; margin-top:10px; line-height:1.55; }
+  .scale-legend{ display:flex; flex-direction:column; gap:8px; margin-top:4px; }
+  .scale-row{ display:flex; align-items:center; gap:10px; font-size:13.5px; }
+  .scale-chip{
+    flex:0 0 auto; width:26px; height:26px; border-radius:8px; display:flex; align-items:center; justify-content:center;
+    font-family:"IBM Plex Mono",monospace; font-weight:700; font-size:13px; color:#0B0F0E;
+  }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field label{ font-size:12.5px; font-weight:600; color:var(--ink-soft); }
+  .field input, .field textarea{
+    font:inherit; font-size:15px; padding:10px 12px; border-radius:10px; border:1px solid var(--line);
+    background:var(--paper); color:var(--ink); width:100%;
+  }
+  .field input:focus, .field textarea:focus, button:focus-visible{
+    outline:2px solid var(--accent); outline-offset:1px;
+  }
+  .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:480px){ .grid-2{ grid-template-columns:1fr; } }
+
+  /* ---------- Question ---------- */
+  .q-ref{ font-size:11.5px; font-weight:600; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; }
+  .q-section{ font-size:13px; color:var(--accent); font-weight:600; margin-top:2px; }
+  .q-text{ font-size:20px; font-weight:600; margin-top:10px; line-height:1.35; }
+  .q-guide{ font-size:13.5px; color:var(--ink-soft); margin-top:8px; line-height:1.5; }
+
+  .scale{ display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-top:18px; }
+  .scale button{
+    font-family:"IBM Plex Mono",monospace; font-weight:700; font-size:17px;
+    border-radius:10px; border:2px solid var(--line); background:var(--surface);
+    color:var(--ink); padding-block:10px; cursor:pointer; transition:transform .12s ease, border-color .12s ease;
+  }
+  .scale button:hover{ transform:translateY(-1px); }
+  .scale button.sel{ border-color:transparent; }
+  .scale-caption{ margin-top:10px; font-size:13px; color:var(--ink-soft); min-height:34px; }
+  .scale-caption b{ color:var(--ink); }
+
+  .na-row{ margin-top:12px; display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink-soft); }
+  .na-row input{ width:16px; height:16px; }
+
+  textarea.notes{ min-height:64px; resize:vertical; margin-top:14px; }
+
+  .nav-bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:20;
+    background:var(--surface); border-top:1px solid var(--line);
+    padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));
+  }
+  .nav-inner{ max-width:640px; margin-inline:auto; display:flex; gap:10px; }
+  button.btn{
+    font:inherit; font-weight:600; font-size:15px; border-radius:10px; border:1px solid var(--line);
+    background:var(--surface-2); color:var(--ink); padding:12px 16px; cursor:pointer;
+  }
+  button.btn.primary{ background:var(--accent); color:var(--accent-ink); border-color:transparent; flex:1; }
+  button.btn.primary:disabled{ opacity:.45; cursor:not-allowed; }
+  button.btn.ghost{ background:transparent; }
+
+  /* ---------- Report ---------- */
+  .banner{ border-radius:var(--radius); padding:18px 20px; }
+  .banner .k{ font-size:12px; text-transform:uppercase; letter-spacing:.08em; font-weight:700; opacity:.92; }
+  .banner .v{ font-size:22px; font-weight:700; margin-top:4px; }
+  .banner .d{ font-size:13.5px; margin-top:6px; opacity:.96; line-height:1.5; }
+
+  .meta-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px 16px; font-size:14px; }
+  .meta-grid dt{ color:var(--ink-soft); font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+  .meta-grid dd{ margin:2px 0 0; font-weight:600; }
+
+  .section-bar-row{ display:flex; align-items:center; gap:10px; font-size:13.5px; }
+  .section-bar-name{ width:150px; flex:0 0 auto; color:var(--ink-soft); }
+  .section-bar-track{ flex:1; height:10px; border-radius:99px; background:var(--surface-2); overflow:hidden; }
+  .section-bar-fill{ height:100%; border-radius:99px; }
+  .section-bar-val{ width:34px; flex:0 0 auto; text-align:right; font-family:"IBM Plex Mono",monospace; font-weight:600; }
+
+  .flag-item{ border:1px solid var(--line); border-radius:10px; padding:12px 14px; }
+  .flag-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .flag-score{
+    font-family:"IBM Plex Mono",monospace; font-weight:700; font-size:13px; border-radius:7px;
+    padding:2px 9px; flex:0 0 auto;
+  }
+  .flag-text{ font-weight:600; font-size:14.5px; }
+  .flag-section{ font-size:12px; color:var(--ink-soft); margin-top:2px; }
+  .flag-note{ font-size:13px; color:var(--ink-soft); margin-top:8px; border-top:1px dashed var(--line); padding-top:8px; }
+
+  .empty-flags{ text-align:center; color:var(--ink-soft); font-size:14px; padding-block:14px; }
+
+  hr.rule{ border:none; border-top:1px solid var(--line); margin:0; }
+
+  [hidden]{ display:none !important; }
+
+  @media print{
+    .topbar, .nav-bar, .no-print{ display:none !important; }
+    body{ background:#fff; color:#000; padding:0; }
+    .card{ box-shadow:none; border-color:#999; }
+    .screen{ padding-bottom:0; }
+  }
 </style>
 
 <div class="wrap">
-  <header class="top">
-    <h1>Kitchen Food Safety Inspection</h1>
-    <p>Tap a section to expand it, then record the result for each item. Points shown are the demerit values that apply if an item is non‑compliant — select 0 if it's compliant.</p>
-    <div class="meta-note">Scoring guide: 5 star = 0–3 points · 4 star = 4–7 points · 3 star = 8–11 points · 12+ points = unrated. A non‑compliance (NC) in any 8‑point item, or an NC food‑standards item, means withdrawal from the scheme regardless of total score.</div>
-  </header>
 
-  <div class="summary">
-    <div class="summary-card">
-      <div class="label">Total score</div>
-      <div class="value" id="totalScore">0</div>
+  <!-- ================= TOP BAR (question screens only) ================= -->
+  <div class="topbar no-print" id="topbar" hidden>
+    <div class="topbar-row">
+      <div class="brand">Kitchen Compliance Audit</div>
+      <div class="brand mono" id="progressLabel">Q1 / 37</div>
     </div>
-    <div class="summary-card star">
-      <div class="label">Rating</div>
-      <div class="value" id="starRating">–</div>
-    </div>
-    <div class="summary-card">
-      <div class="label">Answered</div>
-      <div class="value"><span id="answeredCount">0</span><span style="font-size:0.7rem;color:var(--text-muted);">/<span id="totalCount">0</span></span></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="section-pills" id="sectionPills"></div>
+  </div>
+
+  <!-- ================= INTRO SCREEN ================= -->
+  <div class="screen" id="screen-intro">
+    <div class="card stack intro">
+      <div>
+        <div class="kicker">South Australia · Food &amp; WHS reference-based</div>
+        <h1>Kitchen Compliance Audit</h1>
+        <p class="lead">A one-question-at-a-time inspection for commercial kitchens, covering food safety &amp; hygiene, premises &amp; equipment, cleaning, pest control, work health &amp; safety, and fire &amp; emergency safety. Built from SA Health, Food Standards Code (Standards 3.2.2 &amp; 3.2.3), and SafeWork SA guidance.</p>
+      </div>
+
+      <div class="stack" style="gap:10px;">
+        <div class="field"><label for="f-business">Business / site name</label><input id="f-business" placeholder="e.g. Riverside Kitchen &amp; Catering"></div>
+        <div class="grid-2">
+          <div class="field"><label for="f-address">Address (suburb, SA)</label><input id="f-address" placeholder="e.g. 12 Smith St, Norwood SA"></div>
+          <div class="field"><label for="f-area">Area / kitchen inspected</label><input id="f-area" placeholder="e.g. Main production kitchen"></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label for="f-inspector">Inspector name</label><input id="f-inspector" placeholder="Your name"></div>
+          <div class="field"><label for="f-date">Inspection date</label><input id="f-date" type="date"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="q-ref">Grading scale — used for every question</div>
+        <div class="scale-legend" style="margin-top:8px;">
+          <div class="scale-row"><span class="scale-chip" style="background:var(--s0)">0</span> Fully compliant — no issues observed</div>
+          <div class="scale-row"><span class="scale-chip" style="background:var(--s1)">1</span> Minor observation — best-practice suggestion only</div>
+          <div class="scale-row"><span class="scale-chip" style="background:var(--s2)">2</span> Minor non-conformance — low risk, monitor</div>
+          <div class="scale-row"><span class="scale-chip" style="background:var(--s3)">3</span> Moderate non-conformance — corrective action required</div>
+          <div class="scale-row"><span class="scale-chip" style="background:var(--s4); color:var(--s4-text)">4</span> Major non-conformance — high risk, urgent action</div>
+          <div class="scale-row"><span class="scale-chip" style="background:var(--s5); color:var(--s5-text)">5</span> Critical failure — immediate risk, stop activity</div>
+        </div>
+      </div>
+
+      <div id="resumeRow" hidden style="font-size:13.5px; color:var(--ink-soft); display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--surface-2); border-radius:10px; padding:10px 12px; flex-wrap:wrap;">
+        <span>An in-progress audit was found on this device.</span>
+        <span style="display:flex; gap:8px;">
+          <button class="btn" id="btnResume" type="button" style="padding:6px 10px; font-size:13px;">Resume</button>
+          <button class="btn ghost" id="btnDiscardResume" type="button" style="padding:6px 10px; font-size:13px;">Discard</button>
+        </span>
+      </div>
+
+      <button class="btn primary" id="btnStart" type="button">Begin new inspection →</button>
+      <p style="font-size:12px; color:var(--ink-soft); line-height:1.5;">This tool supports a visual self-inspection and is not a substitute for a formal audit, a registered food safety auditor, or advice from SA Health / SafeWork SA. Reference standards may be updated — always confirm current requirements with the relevant authority.</p>
     </div>
   </div>
 
-  <div id="withdrawBanner" class="withdraw-banner">⚠ Withdrawal condition triggered — an 8‑point item was marked non‑compliant, or the Food Standards Code item is NC. This overrides the star rating.</div>
+  <!-- ================= QUESTION SCREEN ================= -->
+  <div class="screen" id="screen-question" hidden>
+    <div class="card">
+      <div class="q-ref" id="qRef">Reference</div>
+      <div class="q-section" id="qSection">Section</div>
+      <div class="q-text" id="qText">Question text</div>
+      <div class="q-guide" id="qGuide">Guidance</div>
 
-  <div id="groups"></div>
+      <div class="scale" id="qScale" role="radiogroup" aria-label="Score, 0 to 5"></div>
+      <div class="scale-caption" id="qCaption">Select a score to continue.</div>
+
+      <label class="na-row"><input type="checkbox" id="qNA"> Not applicable to this kitchen</label>
+
+      <textarea class="notes" id="qNotes" placeholder="Optional note — what you observed, corrective action, photo reference…"></textarea>
+    </div>
+  </div>
+
+  <!-- ================= REPORT SCREEN ================= -->
+  <div class="screen" id="screen-report" hidden>
+    <div class="stack">
+      <div>
+        <div class="kicker">Inspection complete</div>
+        <h1 style="font-size:24px; margin-top:6px;">Compliance report</h1>
+      </div>
+
+      <div class="banner" id="riskBanner">
+        <div class="k">Overall outcome</div>
+        <div class="v" id="riskHeadline">—</div>
+        <div class="d" id="riskDetail">—</div>
+      </div>
+
+      <div class="card">
+        <dl class="meta-grid" id="metaGrid"></dl>
+      </div>
+
+      <div class="card stack">
+        <h3 style="font-size:15px;">Score by section</h3>
+        <div class="stack" id="sectionBars" style="gap:10px;"></div>
+      </div>
+
+      <div class="card stack">
+        <h3 style="font-size:15px;">Items needing attention <span class="mono" id="flagCount" style="font-weight:600; color:var(--ink-soft);"></span></h3>
+        <div class="stack" id="flagList" style="gap:10px;"></div>
+      </div>
+
+      <div class="stack no-print" style="flex-direction:row;">
+        <button class="btn" id="btnBackToEdit" type="button">← Review answers</button>
+        <button class="btn" id="btnPrint" type="button">Print / save PDF</button>
+        <button class="btn ghost" id="btnRestart" type="button">Start new</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<footer class="actions">
-  <button class="btn" id="resetBtn">Reset all</button>
-  <button class="btn primary" id="printBtn">Print / Save PDF</button>
-</footer>
+<div class="nav-bar no-print" id="navBar" hidden>
+  <div class="nav-inner">
+    <button class="btn" id="btnBack" type="button">← Back</button>
+    <button class="btn primary" id="btnNext" type="button" disabled>Next →</button>
+  </div>
+</div>
 
 <script>
-const DATA = [
-  {title:"General – Food Safety Standards", items:[
-    ["1","Has the business notified","3.2.2-4",[1]],
-    ["1a","FSS appointed & reasonably available","3.2.2A-11",[1]],
-    ["2","Food business general duty and food handler illness responsibilities demonstrated","3.2.2-16,18",[1,8]],
-  ]},
-  {title:"Received goods", items:[
-    ["3","Are protected from contamination","3.2.2-5(1)",[4]],
-    ["4","Are traceable and accurately identified","3.2.2-5(2)",[1]],
-    ["5","PHF received under temp control","3.2.2-5(3,4), 3.2.2A-12",[4]],
-  ]},
-  {title:"Transport & distribution", items:[
-    ["6","All foods are protected from contamination during transport","3.2.2-10(a)",[4]],
-    ["7","PHF transported under time/temp control","3.2.2-10(b,c), 3.2.2A-12",[4]],
-  ]},
-  {title:"Recalls & food disposal", items:[
-    ["8","Food for disposal clearly identified & segregated","3.2.2-11",[1]],
-    ["9","Recall process in place","3.2.2-12",[1]],
-  ]},
-  {title:"Storage", items:[
-    ["10","Food stored under appropriate conditions and protected from contamination","3.2.2-6(1)",[1,4]],
-    ["11","PHF stored under temp control","3.2.2-6(2), 3.2.2A-12",[4,8]],
-  ]},
-  {title:"Processing", items:[
-    ["12","Practical measures in place to process safe and suitable food","3.2.2-7(1)(a)",[4]],
-    ["13","Food protected from contamination","3.2.2-7(1)(b)(i)",[4]],
-    ["14","All foods processed adequately – in particular high risk foods","3.2.2-7(1)(b)(ii); 3.2.2-25, 3.2.2A-12",[8]],
-    ["15","Minimised amount of time PHF are out of temp control","3.2.2-7(2), 3.2.2A-12",[8]],
-    ["16","PHF cooled correctly","3.2.2-7(3); 3.2.2-25, 3.2.2A-12",[8]],
-    ["17","PHF rapidly reheated to hold it hot","3.2.2-7(4), 3.2.2A-12",[8]],
-  ]},
-  {title:"Display", items:[
-    ["18","Displayed foods protected from contamination, RTE self-serve food is supervised & separate utensils provided","3.2.2-8(1-4)",[4]],
-    ["19","PHF displayed under temp control or time limit not exceeded","3.2.2-8(5), 3.2.2A-12",[8]],
-  ]},
-  {title:"Packaging", items:[
-    ["20","Process and materials are appropriate","3.2.2-9",[1]],
-  ]},
-  {title:"Premises & equipment (incl. vehicles)", items:[
-    ["21","Accessible hand washing facilities used only for washing hands, arms and face","3.2.2-17; 3.2.3-14",[4]],
-    ["22","Suitability and maintenance of premises","3.2.2-21, 3.2.3-3,10,11",[1,4]],
-    ["23","Suitability and maintenance of fixtures, fittings and equipment inc. vehicles","3.2.2-21; 3.2.3-12,13,17",[1,4]],
-    ["24","Adequate ventilation and lighting","3.2.3-7,8",[1]],
-    ["25","Adequate toilet facilities","3.2.3-16",[1]],
-    ["26","Facilities provided for storage of personal/non-food items","3.2.3-15",[1]],
-    ["27","Adequate water supply and potable","3.2.3-4,13(1)",[4,8]],
-    ["28","Adequate disposal of sewage & wastewater","3.2.3-5,13(2)",[1]],
-    ["29","Adequate storage of garbage/recyclables","3.2.3-6",[1]],
-    ["30","Practicable animal/pest exclusion & eradication measures in place","3.2.2-24(1)(b,c)",[1]],
-    ["31","No signs of pest/animal activity (score 8 if observed in high risk areas)","3.2.2-24(1)(a)(2,3)",[1,8]],
-    ["32","Accurate temp measuring device in use","3.2.2-22",[4]],
-    ["33","Single use items (protected & disposed)","3.2.2-23",[1]],
-  ]},
-  {title:"Adequate cleaning of", items:[
-    ["34","Premises (walls, floors, ceilings)","3.2.2-19(1)",[1,4]],
-    ["35","Fixtures, fittings & equipment","3.2.2-19(2)",[1,4]],
-  ]},
-  {title:"Adequate cleaning & sanitising of", items:[
-    ["36","Eating and drinking utensils","3.2.2-20(1)(a), 3.2.2A-12",[4]],
-    ["37","Food contact surfaces - including equipment (e.g. benches, chopping boards, slicers)","3.2.2-20(1)(b), 3.2.2A-12",[8]],
-  ]},
-  {title:"Food handlers MUST", items:[
-    ["38","NOT handle food or surfaces in a way that is likely to make food unsafe/unsuitable","3.2.2-13",[4,8]],
-    ["39","Notify supervisor if food contaminated & NOT handle food if carrier of FB illness","3.2.2-14",[8]],
-    ["40","Wear appropriate clean clothing/bandages & minimise personal contamination of food/food contact surfaces","3.2.2-15(1)(a-d)",[4]],
-    ["41","NOT eat, cough, sneeze, smoke etc. over food/food prep surfaces","3.2.2-15(1)(e-h)",[8]],
-    ["42","Wash and dry hands as directed by","3.2.2-15(2,3)",[8]],
-    ["43","Wash hands using HWB, soap, warm running water and dry hands appropriately","3.2.2-15(4)",[8]],
-    ["44","Demonstrate appropriate food handling - skills and knowledge","3.2.2-3, 3.2.2A-10",[1,8]],
-  ]},
-  {title:"Miscellaneous Food Standards Code", items:[
-    ["45","NC with other chapters of the Food Standards Code e.g. labelling, retail sale of food past use by date, hemp, F&V in brine","1.2.1, 1.4.4, 2.3.1","cnc"],
-  ]},
-];
+(function(){
+  "use strict";
 
-const state = {}; // key "no" -> value (number or 'C'/'NC')
-const groupsEl = document.getElementById("groups");
+  var SECTIONS = [
+    { name:"Food handling & hygiene", ref:"FSANZ Std 3.2.2 · SA Health", questions:[
+      { t:"Are food handlers following correct personal hygiene practices?", g:"Clean protective clothing, hair restrained, jewellery/nail policy followed, illness reporting in place, hands washed before starting work and after breaks." },
+      { t:"Are dedicated handwashing facilities adequate and in use?", g:"Separate hand basin in each food handling area, warm running water, soap and single-use towels supplied, basin used only for handwashing." },
+      { t:"Are cross-contamination controls in place?", g:"Colour-coded or separate boards/utensils for raw and ready-to-eat food; raw meat, poultry and eggs stored and prepared separately from ready-to-eat items." },
+      { t:"Is food stored correctly to prevent contamination?", g:"Food covered, stored off the floor, raw items stored below ready-to-eat items, food-grade containers used." },
+      { t:"Is date labelling and stock rotation being managed correctly?", g:"Use-by/best-before dates checked, first-in-first-out rotation practised, no expired stock in use." },
+      { t:"Is food traceable back to a reputable, compliant supplier?", g:"Delivery records kept, supplier details available, deliveries checked for temperature and condition on receipt." }
+    ]},
+    { name:"Temperature control", ref:"FSANZ Std 3.2.2", questions:[
+      { t:"Are refrigerators and cool rooms holding food at 5°C or below?", g:"Check displayed/actual temperature of each cold storage unit against food, not just the dial." },
+      { t:"Are freezers keeping food hard-frozen?", g:"No signs of thawing/refreezing, freezer seals intact, door closes fully." },
+      { t:"Are safe cooking temperatures being reached?", g:"Potentially hazardous food cooked to at least 75°C core temperature (or an equivalent time/temperature combination)." },
+      { t:"Is hot food held at or above 60°C?", g:"Bain-maries, hot display and holding equipment checked with a probe, not by touch or appearance." },
+      { t:"Are cooling and thawing carried out under temperature control?", g:"Cooling from 60°C to 21°C within 2 hours, then 21°C to 5°C within a further 4 hours; thawing in the fridge, microwave or under running water — never on the bench." },
+      { t:"Is a calibrated probe thermometer available and used?", g:"Digital probe accurate to ±1°C, cleaned and sanitised between uses, calibration checked periodically." }
+    ]},
+    { name:"Premises & equipment", ref:"FSANZ Std 3.2.3", questions:[
+      { t:"Are floors, walls and ceilings in good, cleanable condition?", g:"Smooth, impervious surfaces; no gaps, cracks or damage that could harbour dirt or pests; adequate drainage at floor waste points." },
+      { t:"Is lighting adequate and adequately protected?", g:"Sufficient light for safe food handling and cleaning; shatterproof covers or shielded globes over food preparation areas." },
+      { t:"Is ventilation and exhaust adequate for the cooking load?", g:"Extraction removes heat, steam and cooking fumes; no excessive condensation or grease build-up on surfaces." },
+      { t:"Is the water supply and plumbing adequate?", g:"Reliable hot and cold potable water, sufficient sinks (wash-up, food prep, hand wash) for the operation." },
+      { t:"Is waste and grease disposal managed correctly?", g:"Bins have tight-fitting lids and are emptied regularly; grease trap serviced on schedule; trade waste arrangements current." },
+      { t:"Is equipment fit for purpose and well maintained?", g:"Equipment made of food-grade, cleanable materials, in good working order, appropriate for the volume and type of food produced." }
+    ]},
+    { name:"Cleaning & sanitising", ref:"FSANZ Std 3.2.2", questions:[
+      { t:"Is a documented cleaning schedule in place and being followed?", g:"Schedule covers all areas/equipment with assigned frequency and sign-off; records available on request." },
+      { t:"Are sanitisers used and stored correctly?", g:"Food-grade sanitiser, correct dilution, within shelf life, test strips or dosing system used where applicable." },
+      { t:"Is the dishwasher/glasswasher sanitising effectively?", g:"Rinse cycle reaching at least 80°C, or chemical sanitising verified; wash results checked (no residue or streaking)." },
+      { t:"Are surfaces, floors and equipment visibly clean?", g:"No grease build-up, food debris, mould or dust accumulation in food handling or storage areas." }
+    ]},
+    { name:"Pest control", ref:"FSANZ Std 3.2.2 / 3.2.3", questions:[
+      { t:"Is there any evidence of pest activity?", g:"Check for droppings, gnaw marks, insects, or nesting in dry stores, behind equipment and in ceiling voids." },
+      { t:"Is a pest control program current?", g:"Licensed contractor visiting on a set schedule, service reports on file and any recommended actions closed out." },
+      { t:"Are proofing measures maintaining a pest-proof barrier?", g:"Flyscreens intact, doors self-closing or screened, gaps around pipework and walls sealed." }
+    ]},
+    { name:"Work health & safety", ref:"SafeWork SA", questions:[
+      { t:"Are slip and trip hazards controlled?", g:"Non-slip flooring maintained, spills cleaned immediately, wet-floor signage used, walkways kept clear." },
+      { t:"Are manual handling risks controlled?", g:"Trolleys/mechanical aids available for heavy or awkward loads, storage heights reasonable, team-lift practice for heavy items." },
+      { t:"Are burns and scalds risks controlled?", g:"Guarding on hot surfaces, protective equipment for handling hot items/oil, safe pot/pan handle orientation, first-aid readily available." },
+      { t:"Are knives and cutting equipment used and stored safely?", g:"Knives kept sharp, stored in a knife block/magnetic strip (not loose in drawers), cut-resistant gloves available where appropriate." },
+      { t:"Is electrical equipment safe to use?", g:"Cords and plugs undamaged, no overloaded outlets near water, tag-and-test records current where required." },
+      { t:"Are mixers, slicers and other machinery adequately guarded?", g:"Guards fitted and used, interlocks functioning, staff trained on safe operation and isolation before cleaning." },
+      { t:"Are chemicals stored and handled safely?", g:"Safety Data Sheets accessible, chemicals segregated from food, stored in original/labelled containers, adequate ventilation during use." }
+    ]},
+    { name:"Fire & emergency safety", ref:"AS 1851 · SA CFS", questions:[
+      { t:"Are fire extinguishers and fire blankets present and serviced?", g:"Correct extinguisher types for kitchen hazards, tagged with a current service date, unobstructed and clearly signed." },
+      { t:"Is the kitchen exhaust and canopy cleaned to schedule?", g:"Cleaning frequency matches cooking load in line with AS 1851 grease-exhaust maintenance guidance; records available." },
+      { t:"If fitted, is the fire suppression system serviced and functional?", g:"Wet-chemical or equivalent suppression system tagged with current service date; nozzles unobstructed. Mark N/A if no system is fitted." },
+      { t:"Are emergency exits and egress paths clear?", g:"Exits unlocked and unobstructed during operating hours, exit signage illuminated and visible." },
+      { t:"Are emergency procedures current and understood by staff?", g:"Evacuation plan displayed, staff briefed on procedure and assembly point, emergency contact numbers accessible." }
+    ]}
+  ];
 
-function fmtAvailable(pts){
-  if(pts === "cnc") return "C or NC";
-  return pts.join(" or ");
-}
+  var SCALE_LABELS = [
+    "Fully compliant — no issues observed",
+    "Minor observation — best-practice suggestion only",
+    "Minor non-conformance — low risk, monitor",
+    "Moderate non-conformance — corrective action required",
+    "Major non-conformance — high risk, urgent action",
+    "Critical failure — immediate risk, stop activity"
+  ];
+  var SCALE_COLORS = ["var(--s0)","var(--s1)","var(--s2)","var(--s3)","var(--s4)","var(--s5)"];
+  var SCALE_TEXT = ["var(--s0-text)","var(--s1-text)","var(--s2-text)","var(--s3-text)","var(--s4-text)","var(--s5-text)"];
 
-DATA.forEach((group, gi) => {
-  const section = document.createElement("section");
-  section.className = "group";
-  const details = document.createElement("details");
-  if(gi === 0) details.open = true;
-
-  const summary = document.createElement("summary");
-  summary.innerHTML = `
-    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-    <span class="group-title">${group.title}</span>
-    <span class="group-badge" data-badge="${gi}">0/${group.items.length}</span>
-  `;
-  details.appendChild(summary);
-
-  const itemsWrap = document.createElement("div");
-  itemsWrap.className = "items";
-
-  group.items.forEach(([no, text, ref, pts]) => {
-    const item = document.createElement("div");
-    item.className = "item";
-    const options = pts === "cnc" ? [["C","C"],["NC","NC"]] : [[0,"0"], ...pts.map(p => [p, String(p)])];
-    const chipsHtml = options.map(([val,label]) => {
-      const ncClass = (val === "NC") ? " nc" : "";
-      return `<button type="button" class="chip${ncClass}" data-no="${no}" data-val="${val}">${label}</button>`;
-    }).join("");
-    item.innerHTML = `
-      <div class="item-head">
-        <span class="item-no">${no}</span>
-        <span class="item-text">${text}<span class="item-ref">${ref}</span></span>
-      </div>
-      <div class="result-row">
-        <span class="result-label">Result — available: ${fmtAvailable(pts)}</span>
-        ${chipsHtml}
-      </div>
-    `;
-    itemsWrap.appendChild(item);
+  // Flatten questions with section index
+  var QUESTIONS = [];
+  SECTIONS.forEach(function(sec, si){
+    sec.questions.forEach(function(q){
+      QUESTIONS.push({ section:si, text:q.t, guide:q.g });
+    });
   });
 
-  details.appendChild(itemsWrap);
-  section.appendChild(details);
-  groupsEl.appendChild(section);
-});
+  var state = {
+    meta:{ business:"", address:"", area:"", inspector:"", date:"" },
+    answers:{},   // idx -> {score, na, note}
+    current:0,
+    started:false,
+    finished:false
+  };
 
-function isNumericResult(no){
-  for(const g of DATA){ for(const it of g.items){ if(it[0]===no) return it[3] !== "cnc"; } }
-  return true;
-}
+  var STORAGE_KEY = "kitchenAudit.v1";
 
-function recalc(){
-  let total = 0;
-  let answered = 0;
-  let withdraw = false;
+  function saveDraft(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+  function loadDraft(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return null;
+      return JSON.parse(raw);
+    }catch(e){ return null; }
+  }
+  function clearDraft(){
+    try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  }
 
-  DATA.forEach((group, gi) => {
-    let groupAnswered = 0;
-    group.items.forEach(([no,,,pts]) => {
-      if(state[no] !== undefined){
-        groupAnswered++;
-        if(pts === "cnc"){
-          if(state[no] === "NC") withdraw = true;
-        } else {
-          const v = Number(state[no]);
-          total += v;
-          if(v === 8) withdraw = true;
-        }
+  // ---- element refs ----
+  var el = {
+    screenIntro: document.getElementById("screen-intro"),
+    screenQuestion: document.getElementById("screen-question"),
+    screenReport: document.getElementById("screen-report"),
+    topbar: document.getElementById("topbar"),
+    navBar: document.getElementById("navBar"),
+    progressFill: document.getElementById("progressFill"),
+    progressLabel: document.getElementById("progressLabel"),
+    sectionPills: document.getElementById("sectionPills"),
+    qRef: document.getElementById("qRef"),
+    qSection: document.getElementById("qSection"),
+    qText: document.getElementById("qText"),
+    qGuide: document.getElementById("qGuide"),
+    qScale: document.getElementById("qScale"),
+    qCaption: document.getElementById("qCaption"),
+    qNA: document.getElementById("qNA"),
+    qNotes: document.getElementById("qNotes"),
+    btnBack: document.getElementById("btnBack"),
+    btnNext: document.getElementById("btnNext"),
+    btnStart: document.getElementById("btnStart"),
+    resumeRow: document.getElementById("resumeRow"),
+    btnResume: document.getElementById("btnResume"),
+    btnDiscardResume: document.getElementById("btnDiscardResume"),
+    btnBackToEdit: document.getElementById("btnBackToEdit"),
+    btnPrint: document.getElementById("btnPrint"),
+    btnRestart: document.getElementById("btnRestart")
+  };
+
+  function fmtDate(d){
+    if(!d) return "—";
+    try{
+      var parts = d.split("-");
+      var dt = new Date(+parts[0], +parts[1]-1, +parts[2]);
+      return dt.toLocaleDateString("en-AU", { day:"numeric", month:"long", year:"numeric" });
+    }catch(e){ return d; }
+  }
+
+  function buildScaleButtons(){
+    el.qScale.innerHTML = "";
+    for(var i=0;i<6;i++){
+      (function(i){
+        var b = document.createElement("button");
+        b.type = "button";
+        b.textContent = i;
+        b.dataset.score = i;
+        b.setAttribute("role","radio");
+        b.setAttribute("aria-checked","false");
+        b.setAttribute("aria-label", i + " — " + SCALE_LABELS[i]);
+        b.addEventListener("click", function(){ setScore(i); });
+        el.qScale.appendChild(b);
+      })(i);
+    }
+  }
+
+  function renderPills(){
+    el.sectionPills.innerHTML = "";
+    var currentSection = QUESTIONS[state.current].section;
+    SECTIONS.forEach(function(sec, si){
+      var p = document.createElement("span");
+      p.className = "pill" + (si < currentSection ? " done" : "") + (si === currentSection ? " current" : "");
+      p.textContent = sec.name;
+      if(si <= currentSection && si !== currentSection){
+        p.classList.add("clickable");
+        p.addEventListener("click", function(){
+          // jump to first question of that section
+          for(var i=0;i<QUESTIONS.length;i++){
+            if(QUESTIONS[i].section === si){ state.current = i; renderQuestion(); break; }
+          }
+        });
+      }
+      el.sectionPills.appendChild(p);
+    });
+  }
+
+  function renderQuestion(){
+    var q = QUESTIONS[state.current];
+    var sec = SECTIONS[q.section];
+    el.qRef.textContent = sec.ref;
+    el.qSection.textContent = sec.name;
+    el.qText.textContent = q.text;
+    el.qGuide.textContent = q.guide;
+
+    var ans = state.answers[state.current] || { score:null, na:false, note:"" };
+    el.qNA.checked = !!ans.na;
+    el.qNotes.value = ans.note || "";
+
+    Array.prototype.forEach.call(el.qScale.children, function(btn){
+      var s = +btn.dataset.score;
+      var isSel = ans.score === s && !ans.na;
+      btn.classList.toggle("sel", isSel);
+      btn.style.background = isSel ? SCALE_COLORS[s] : "";
+      btn.style.color = isSel ? SCALE_TEXT[s] : "";
+      btn.style.borderColor = isSel ? "transparent" : "";
+      btn.disabled = !!ans.na;
+      btn.setAttribute("aria-checked", String(isSel));
+    });
+    el.qCaption.innerHTML = (ans.score !== null && !ans.na)
+      ? "<b>" + ans.score + " — </b>" + SCALE_LABELS[ans.score]
+      : "Select a score to continue.";
+
+    el.progressLabel.textContent = "Q" + (state.current+1) + " / " + QUESTIONS.length;
+    el.progressFill.style.width = Math.round(((state.current)/QUESTIONS.length)*100) + "%";
+    renderPills();
+
+    el.btnBack.disabled = false;
+    el.btnBack.style.visibility = state.current === 0 ? "hidden" : "visible";
+    updateNextEnabled();
+
+    show("question");
+    window.scrollTo(0,0);
+  }
+
+  function updateNextEnabled(){
+    var ans = state.answers[state.current];
+    var ok = ans && (ans.na || ans.score !== null);
+    el.btnNext.disabled = !ok;
+    el.btnNext.textContent = (state.current === QUESTIONS.length-1) ? "Finish →" : "Next →";
+  }
+
+  function setScore(score){
+    var ans = state.answers[state.current] || { score:null, na:false, note:"" };
+    ans.score = score;
+    ans.na = false;
+    state.answers[state.current] = ans;
+    renderQuestion();
+    saveDraft();
+  }
+
+  el.qNA.addEventListener("change", function(){
+    var ans = state.answers[state.current] || { score:null, na:false, note:"" };
+    ans.na = el.qNA.checked;
+    state.answers[state.current] = ans;
+    renderQuestion();
+    saveDraft();
+  });
+
+  el.qNotes.addEventListener("input", function(){
+    var ans = state.answers[state.current] || { score:null, na:false, note:"" };
+    ans.note = el.qNotes.value;
+    state.answers[state.current] = ans;
+    saveDraft();
+  });
+
+  el.btnNext.addEventListener("click", function(){
+    if(el.btnNext.disabled) return;
+    if(state.current < QUESTIONS.length-1){
+      state.current++;
+      renderQuestion();
+    } else {
+      finishAudit();
+    }
+  });
+
+  el.btnBack.addEventListener("click", function(){
+    if(state.current > 0){
+      state.current--;
+      renderQuestion();
+    }
+  });
+
+  function show(which){
+    el.screenIntro.hidden = which !== "intro";
+    el.screenQuestion.hidden = which !== "question";
+    el.screenReport.hidden = which !== "report";
+    el.topbar.hidden = which !== "question";
+    el.navBar.hidden = which !== "question";
+  }
+
+  function collectMeta(){
+    state.meta.business = document.getElementById("f-business").value.trim();
+    state.meta.address = document.getElementById("f-address").value.trim();
+    state.meta.area = document.getElementById("f-area").value.trim();
+    state.meta.inspector = document.getElementById("f-inspector").value.trim();
+    state.meta.date = document.getElementById("f-date").value;
+  }
+
+  el.btnStart.addEventListener("click", function(){
+    collectMeta();
+    state.started = true;
+    state.current = 0;
+    el.resumeRow.hidden = true;
+    saveDraft();
+    renderQuestion();
+  });
+
+  el.btnBackToEdit.addEventListener("click", function(){
+    state.current = 0;
+    renderQuestion();
+  });
+
+  el.btnPrint.addEventListener("click", function(){ window.print(); });
+
+  el.btnRestart.addEventListener("click", function(){
+    if(!confirm("Start a new inspection? This will clear all current answers.")) return;
+    state = { meta:{business:"",address:"",area:"",inspector:"",date:""}, answers:{}, current:0, started:false, finished:false };
+    clearDraft();
+    document.getElementById("f-business").value = "";
+    document.getElementById("f-address").value = "";
+    document.getElementById("f-area").value = "";
+    document.getElementById("f-inspector").value = "";
+    document.getElementById("f-date").value = "";
+    show("intro");
+    window.scrollTo(0,0);
+  });
+
+  el.btnDiscardResume.addEventListener("click", function(){
+    clearDraft();
+    state = { meta:{business:"",address:"",area:"",inspector:"",date:""}, answers:{}, current:0, started:false, finished:false };
+    el.resumeRow.hidden = true;
+  });
+
+  function finishAudit(){
+    state.finished = true;
+    saveDraft();
+    renderReport();
+    show("report");
+    window.scrollTo(0,0);
+  }
+
+  function renderReport(){
+    // meta
+    var m = state.meta;
+    document.getElementById("metaGrid").innerHTML =
+      metaField("Business / site", m.business || "—") +
+      metaField("Area inspected", m.area || "—") +
+      metaField("Address", m.address || "—") +
+      metaField("Inspector", m.inspector || "—") +
+      metaField("Date", fmtDate(m.date)) +
+      metaField("Questions assessed", countAssessed() + " of " + QUESTIONS.length);
+
+    // section bars
+    var barsHtml = "";
+    var overallMax = 0, overallSum = 0, overallCount = 0;
+    SECTIONS.forEach(function(sec, si){
+      var sum=0, count=0, max=0;
+      QUESTIONS.forEach(function(q, i){
+        if(q.section !== si) return;
+        var a = state.answers[i];
+        if(!a || a.na || a.score===null) return;
+        sum += a.score; count++; max = Math.max(max, a.score);
+        overallSum += a.score; overallCount++; overallMax = Math.max(overallMax, a.score);
+      });
+      var avg = count ? (sum/count) : 0;
+      barsHtml += '<div class="section-bar-row">'+
+        '<div class="section-bar-name">'+escapeHtml(sec.name)+'</div>'+
+        '<div class="section-bar-track"><div class="section-bar-fill" style="width:'+(avg/5*100)+'%; background:'+scoreColorVar(Math.round(avg))+'"></div></div>'+
+        '<div class="section-bar-val">'+(count? avg.toFixed(1):"—")+'</div>'+
+      '</div>';
+    });
+    document.getElementById("sectionBars").innerHTML = barsHtml;
+
+    // overall risk
+    var banner = document.getElementById("riskBanner");
+    var headline = document.getElementById("riskHeadline");
+    var detail = document.getElementById("riskDetail");
+    var avgAll = overallCount ? (overallSum/overallCount) : 0;
+    var level;
+    if(overallMax >= 5) level = 5;
+    else if(overallMax >= 4) level = 4;
+    else if(overallMax >= 3 || avgAll > 1.5) level = 3;
+    else level = (avgAll > 0.5 ? 1 : 0);
+
+    var levelInfo = {
+      5:{ label:"Critical — immediate action required", detail:"One or more critical failures were recorded. Affected activities should stop until corrected, and SA Health / SafeWork SA notified if required.", color:"var(--s5)", text:"var(--s5-text)" },
+      4:{ label:"High risk — urgent action required", detail:"Major non-conformances were recorded. Schedule urgent corrective action and re-check before the next service.", color:"var(--s4)", text:"var(--s4-text)" },
+      3:{ label:"Moderate — corrective action needed", detail:"Moderate non-conformances were recorded. Assign corrective actions with a completion date.", color:"var(--s3)", text:"var(--s3-text)" },
+      1:{ label:"Minor observations only", detail:"No significant non-conformances. Minor items can be addressed as routine maintenance.", color:"var(--s1)", text:"var(--s1-text)" },
+      0:{ label:"Good compliance", detail:"No issues of concern were recorded in this inspection.", color:"var(--s0)", text:"var(--s0-text)" }
+    }[level];
+    banner.style.background = levelInfo.color;
+    banner.style.color = levelInfo.text;
+    headline.textContent = levelInfo.label;
+    detail.textContent = levelInfo.detail;
+
+    // flags (score >= 3)
+    var flags = [];
+    QUESTIONS.forEach(function(q,i){
+      var a = state.answers[i];
+      if(a && !a.na && a.score !== null && a.score >= 3){
+        flags.push({ q:q, a:a, i:i });
       }
     });
-    const badge = document.querySelector(`[data-badge="${gi}"]`);
-    if(badge){
-      badge.textContent = `${groupAnswered}/${group.items.length}`;
-      badge.classList.toggle("done", groupAnswered === group.items.length);
+    flags.sort(function(x,y){ return y.a.score - x.a.score; });
+    document.getElementById("flagCount").textContent = "(" + flags.length + ")";
+    var flagHtml = "";
+    if(flags.length === 0){
+      flagHtml = '<div class="empty-flags">No items scored 3 or higher — nothing flagged for corrective action.</div>';
+    } else {
+      flags.forEach(function(f){
+        flagHtml += '<div class="flag-item">'+
+          '<div class="flag-top">'+
+            '<div><div class="flag-text">'+escapeHtml(f.q.text)+'</div>'+
+            '<div class="flag-section">'+escapeHtml(SECTIONS[f.q.section].name)+'</div></div>'+
+            '<div class="flag-score" style="background:'+scoreColorVar(f.a.score)+'; color:'+scoreTextVar(f.a.score)+'">'+f.a.score+'</div>'+
+          '</div>'+
+          (f.a.note ? '<div class="flag-note">'+escapeHtml(f.a.note)+'</div>' : '') +
+        '</div>';
+      });
     }
-    answered += groupAnswered;
-  });
-
-  document.getElementById("totalScore").textContent = total;
-  document.getElementById("answeredCount").textContent = answered;
-  document.getElementById("totalCount").textContent = DATA.reduce((s,g) => s + g.items.length, 0);
-
-  let star = "–";
-  if(answered > 0){
-    if(total <= 3) star = "5★";
-    else if(total <= 7) star = "4★";
-    else if(total <= 11) star = "3★";
-    else star = "Unrated";
+    document.getElementById("flagList").innerHTML = flagHtml;
   }
-  document.getElementById("starRating").textContent = withdraw ? "N/A" : star;
-  document.getElementById("withdrawBanner").classList.toggle("show", withdraw);
-}
 
-groupsEl.addEventListener("click", (e) => {
-  const chip = e.target.closest(".chip");
-  if(!chip) return;
-  const no = chip.dataset.no;
-  const val = chip.dataset.val;
-  const already = state[no] !== undefined && String(state[no]) === val;
-  const row = chip.parentElement;
-  row.querySelectorAll(".chip").forEach(c => c.classList.remove("selected"));
-  if(already){
-    delete state[no];
-  } else {
-    state[no] = isNaN(Number(val)) ? val : Number(val);
-    chip.classList.add("selected");
+  function countAssessed(){
+    var c = 0;
+    Object.keys(state.answers).forEach(function(k){
+      var a = state.answers[k];
+      if(a && (a.na || a.score !== null)) c++;
+    });
+    return c;
   }
-  recalc();
-});
 
-document.getElementById("resetBtn").addEventListener("click", () => {
-  if(!confirm("Clear all recorded results?")) return;
-  Object.keys(state).forEach(k => delete state[k]);
-  document.querySelectorAll(".chip.selected").forEach(c => c.classList.remove("selected"));
-  recalc();
-});
+  function scoreColorVar(s){
+    return SCALE_COLORS[Math.max(0,Math.min(5,s))];
+  }
+  function scoreTextVar(s){
+    return SCALE_TEXT[Math.max(0,Math.min(5,s))];
+  }
+  function metaField(k,v){
+    return '<div><dt>'+escapeHtml(k)+'</dt><dd>'+escapeHtml(v)+'</dd></div>';
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
 
-document.getElementById("printBtn").addEventListener("click", () => window.print());
-
-recalc();
+  // ---- init ----
+  buildScaleButtons();
+  var draft = loadDraft();
+  if(draft && draft.started && Object.keys(draft.answers||{}).length){
+    el.resumeRow.hidden = false;
+    el.btnResume.addEventListener("click", function(){
+      state = draft;
+      document.getElementById("f-business").value = state.meta.business||"";
+      document.getElementById("f-address").value = state.meta.address||"";
+      document.getElementById("f-area").value = state.meta.area||"";
+      document.getElementById("f-inspector").value = state.meta.inspector||"";
+      document.getElementById("f-date").value = state.meta.date||"";
+      if(state.finished){
+        renderReport();
+        show("report");
+        window.scrollTo(0,0);
+      } else {
+        renderQuestion();
+      }
+    });
+  }
+  show("intro");
+})();
 </script>
